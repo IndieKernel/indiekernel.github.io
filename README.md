@@ -1,2 +1,3 @@
-# indiekernel.github.io
-IndieKernel website repository
+# IndieKernel website
+
+This is the static website repository.
