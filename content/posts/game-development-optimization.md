@@ -78,25 +78,48 @@ What interests us here, is the programmer point. There's a ton of ways to transp
 
 But there will be only one that offers the best user experience, **the most optimized resources usage**.
 
-Now we understand that optimization and user experience are **tight together**, to what level of *software abstraction* can we provide the best user experience ?
+Now we understand that optimization and user experience are **tight together**, to what level of *software abstraction* can we provide the
+best user experience ?
 
 ## Are compilers better than us ?
 
----
+You may have ear that optimization is useless and a time loss as compilers, in the most cases, do a better job than us and the effort you'll
+put in optimization is a big waste.
 
-talk about past constraints taking roller coaster tycoon as example and the fact that, now, compilers do the work better than us.
+There is only one correct point: compilers are, in most cases, better than us now.
 
-introduce algorithmic, the part that the compiler cannot do better than the human.
+Then, about 30 years ago, optimization was mandatory as computers had a few amounts of resources.
+Optimization was a daily thing in programmer's workflow. With such hardware, poor rigor will lead you to the worst user experience or no
+experience at all.
 
-speak about the fact by the better algorithm we do the thinner resources usage and so provides the better user experience with execution speed, power and hardware lifetime reduce.
+A perfect example of an old optimized game is Roller Coaster Tycoon. The developer, Chris Sawyer, has entirely programmed the game 
+in x86 assembly (1% of C language). Why ? Because compilers were not performant than today, and seasoned programmers like Chris Sawyer knew
+how to handle the job better than them.
 
-## Know your low layers
+Nowadays, compilers have evolved to master instructions set and computers disposes of a huge amount of
+resources that you can waste a little without too much impact on user experience. In fact,
+this is a good thing for many application domains such as web development, where interpreted languages suits the best for this task. Trust me,
+you don't want to implement a web API in C or x86\_64 assembly.
+
+Interpreted languages offer a high-level interface to improve productivity but compromise on performances.
+
+But there's a point that we haven't discussed yet and which can't be optimized by the compiler: algorithms. The algorithm choice or design is
+only in the human hands, as HE'S "saying" to the computer which instruction it has to do.
+This is the programmer responsibility to know if he's implementing a O(1) or a O(N*N) complexity, the compiler is not aware about this as
+it will only optimize at assembly level on control structures and memory representation.
+
+In the domain that interest us, the resources usage can be big, very big: fetch-decode-execute cycles, memory footprint, IRQs, etc. The CPU
+and the GPU can be very quickly manhandled.
+Optimize a game can open interests in reducing power consumption and a fluid gameplay, understand a perfect user experience. Nobody wants to
+play a First-Personal Shooter that crashes or provides a high ping response with a poor frame rate.
+
+## Know your layers
 
 ---
 
 speak about knowing what operates in the low abstract layers can be benefic to work in high layers and let you optimize on the fly.
 
-tease the next article subject with a short example of GDScript:
+show some basic examples as filesystem I/O:
 
 ```gdscript
 
