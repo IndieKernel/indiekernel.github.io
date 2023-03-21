@@ -4,3 +4,4 @@ title = 'IndieKernel'
 theme = 'archie'
 enableRobotsTXT = true
 googleAnalytics = ""
+buildFuture = true
