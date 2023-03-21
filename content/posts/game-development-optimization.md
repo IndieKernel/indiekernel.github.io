@@ -75,7 +75,7 @@ best user experience ?
 ## Are compilers better than us ?
 
 You may have ear that optimization is useless as compilers, in the most cases, *do a better job* than us so the effort you'll
-put in optimization is a big waste.
+put in it is a big waste.
 
 There is only **one correct point** here: compilers are, in most cases, better than us, **now**.
 
@@ -92,12 +92,12 @@ The developer, Chris Sawyer, has entirely programmed the game in [x86 assembly](
 > **source**: *[Chris Sawyer F.A.Q](http://www.chrissawyergames.com/faq3.htm)*
 
 Why thus ? Because of *all the constraints* mentioned above.
-Roller Coaster Tycoon can run on a large panel of hardware materials by **providing the best user experience** each time you run it.
+Roller Coaster Tycoon can run on a large panel of hardware materials by **providing the best user experience** each time you execute it.
 
 {{< visual article="game-development-optimization" visual="rct-figure.jpg" alt_text="Roller Coaster Tycoon screenshot" caption="One of our favorite game :)" >}}
 
 Nowadays, compilers have evolved to master instructions set while having substantial resources, in a manner that it can be OK to waste
-a little of resources without too much impact on user experience.
+a little without too much impact on user experience.
 
 This is a good thing for many application domains such as web development, where the value-added (refactor) and data integrity are more important than performances. Interpreted languages suits the best for this task as they provide a *high-level API* to improve productivity but compromise on performance.
 
@@ -120,27 +120,110 @@ The CPU and the GPU **can be very quickly manhandled**.
 Optimize a game can **open interests** in reducing **power consumption** and a **fluid gameplay**, understand here a perfect user experience.
 Nobody wants to play a First-Personal Shooter that crashes or provides a high ping response with a poor frame rate.
 
-If I had to take a game as example for this, I'll go with Doom. [John Carmack](https://en.wikipedia.org/wiki/John_Carmack) is a reference programmer on this subject.
+If I had to take a game as example for this, I'll go with Doom. [John Carmack](https://en.wikipedia.org/wiki/John_Carmack) is a
+reference programmer on this subject with his famous [Carmack's reverse algorithm](https://en.wikipedia.org/wiki/Shadow_volume#Depth_fail).
 
 ## Know your layers
 
----
+A first good step in optimization is to know about *what operates in lower abstraction levels*. This can let you optimize on-the-fly
+and avoid common pitfalls.
 
-speak about knowing what operates in the low abstract layers can be benefic to work in high layers and let you optimize on the fly.
+Better than long sentences, take a look at this Python snippet:
 
-show some basic examples as why this is important to call `queue_free`:
+```python
+import sys
 
-```gdscript
-# write the example here
+from random import randbytes
+
+# ...
+
+fp = open("a_file_descriptor", "wb")
+
+buffer = randbytes(1024)
+
+fp.write(buffer)
+
+# ...
+
+sys.exit(0)
 ```
+
+Some people that have never worked with low layers will *not see* what bad things are happening here.
+Let's explain what's the *Python virtual machine* is likely doing under the hood:
+
+```python
+# ...
+
+fp = open("a_file_descriptor", "wb")
+```
+
+First, this instruction will in order:
+
+1. Allocate memory for `a_file_descriptor` and `wb` strings.
+2. Push `a_file_descriptor` and `wb` memory addresses on the stack.
+3. Jump to Python's `open` subroutine
+4. Make a kernel interrupt to use the real `open` system call.
+5. Returns from Python's `open` subroutine with a writable file descriptor provided by the kernel
+
+```python
+# ...
+
+buffer = randbytes(1024)
+
+fp.write(buffer)
+```
+
+6. Push `buffer` address on the stack.
+7. Store `1024` as an immediate value in a registry.
+8. Jump to `randbytes` subroutine and execute it (Memory allocation will operates here for the bytes string).
+9. Returns from subroutine with a memory address that refers to the first element of `buffer` bytes array.
+10. Push `buffer` address on the stack again.
+11. Jump to Python's `write` subroutine (a method here).
+12. Make a kernel interrupt to use the real `write` system call and write the data pointed by buffer value
+(a memory address *to the first element* of the bytes array).
+13. Returns from Python's `write` subroutine.
+
+This is a concise description of what is going on at assembly level when you run theses few lines of Python.
+In reality, as this is an interpreted language, Python syntax is *interpreted* in bytecode.
+
+Bytecode is an executable custom instruction set, for a *compiled* virtual machine, to ensure *portability* across 
+different hardware architectures. Consider that many inner steps can occur, like operating system standard library calls.
+
+So what's the problem here ? **A major one**: the file descriptor is never close.
+
+Other than this is **a major security issue** to leave a writable file descriptor **opened along the whole execution frame**,
+think about **allocating a substantial amount of memory** to read and write data in-game: you will quickly reach an *out of memory error*
+and degrade game performances, so the **user experience**.
+
+Memory leaks only "vanish" when the *execution frame* is over, when the program ends running, as this is the kernel job.
+
+But when you are running the program, **this is up to you to control** what you do with the *allocated page* by the kernel.
 
 ## So what can I do ?
 
----
+Optimization and user experience are **tight together**: this is the programmer responsibility to implements the experience
+that the game designer wants to give to the player.
 
-conclusion, but optimization is always useful and can be a great challenge. say Chris Sawyer and John Carmack are gods. don't forget the portability point (for people that are following the reading ;) )
+Knowing some basic low-level theory can **help you** to achieve that goal and avoid common pitfalls.
+
+Seasoned programmers such as Chris Sawyer or John Carmack are masters in the optimization domain.
+But they have been operated from years ago, when those concepts were unavoidable due to hardware limitations.
+
+You may not be confident with some concepts addressed in this article such as *kernel memory pagination* or *memory stack/heap*
+but further articles will aim to explain theses with the better approach..., to give you the better reading experience ;)
+
+What you can do now is to experiment with languages, that give you more control on your program, such as C language
+and read about systems lecture.
+
+\0
 
 ---
 
 **Some reading material with this article**
-+ 
+
++ [What's a compiler ? - OsDev.org](https://wiki.osdev.org/Compiler)
++ [Memory allocation - OsDev.org](https://wiki.osdev.org/Memory_Allocation)
+
+---
+
+*tags*
