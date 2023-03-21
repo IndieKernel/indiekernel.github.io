@@ -1,0 +1,9 @@
+
+<figure class="visual">
+    {{ $article := .Get "article" }}
+    {{ $visual := .Get "visual" }}
+    {{ $alt_text := .Get "alt_text" }}
+    <img src="/visuals/{{ $article }}_{{ $visual }}" alt="{{ $alt_text}}" width="512" height="512">
+    <figcaption>{{ .Get "caption" }}</figcaption>
+</figure>
+

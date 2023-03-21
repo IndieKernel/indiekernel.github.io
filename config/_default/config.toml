@@ -1,0 +1,59 @@
+baseURL = "https://www.indiekernel.eu/"
+languageCode = "en-us"
+title = "IndieKernel"
+theme = "archie"
+copyright = "\u00A9 IndieKernel"
+enableEmoji = true
+enableInlineShortcodes = true
+summaryLength = 144
+
+[server]
+[[server.headers]]
+for = "/**"
+	[server.headers.values]
+	X-Content-Type-Options = 'nosniff'
+	X-Frame-Options = "DENY"
+	X-XSS-Protection = "1; mode=block"
+
+[markup]
+	[markup.goldmark]
+		[markup.goldmark.renderer]
+		unsafe = true
+
+[params]
+AuthorName = "Shukuru"
+Subtitle = """
+The good place if you can't choose between game design
+and system programming.
+"""
+
+[[params.social]]
+name = "Twitter"
+icon = "twitter"
+url = "https://twitter.indiekernel.eu/"
+
+[[params.social]]
+name = "GitHub"
+icon = "github"
+url = "https://github.indiekernel.eu/"
+
+[[params.social]]
+name = "Ko-Fi"
+icon = "coffee"
+url = "https://ko-fi.com/indiekernel/"
+
+[[menu.main]]
+name = "Index"
+url = "/"
+weight = 1
+
+[menu]
+[[menu.main]]
+name = "Posts"
+url = "/posts"
+weight = 2
+
+[[menu.main]]
+name = "About"
+url = "/about"
+weight = 3

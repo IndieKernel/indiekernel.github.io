@@ -1,0 +1,7 @@
+
+<figure class="cover">
+    {{ $filename := .Get "filename" }}
+    <img src="/covers/{{ $filename }}" alt="COVER" width="256" height="256">
+    <figcaption>{{ .Get "caption" }}</figcaption>
+</figure>
+

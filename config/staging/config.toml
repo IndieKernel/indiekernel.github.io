@@ -1,0 +1,6 @@
+baseURL = 'https://www.indiekernel.eu/'
+languageCode = 'en-us'
+title = 'IndieKernel'
+theme = 'archie'
+buildDrafts = true
+buildFuture = true

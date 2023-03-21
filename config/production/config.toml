@@ -1,0 +1,6 @@
+baseURL = 'https://www.indiekernel.eu/'
+languageCode = 'en-us'
+title = 'IndieKernel'
+theme = 'archie'
+enableRobotsTXT = true
+googleAnalytics = ""
