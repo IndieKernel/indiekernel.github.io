@@ -1,6 +1,6 @@
 ---
 title: "Game development: Optimization"
-date: 2023-03-12T17:31:37+01:00
+date: 2023-03-21T07:00:00+01:00
 summary: >
     We often heard about optimization in game development.
     But what is it really about ? Do we need to optimize all
@@ -10,7 +10,6 @@ tags: [
     "optimization",
     "theory"
 ]
-draft: true
 ---
 
 <!-- POST COVER -->
